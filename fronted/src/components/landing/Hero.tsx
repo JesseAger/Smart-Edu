@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-image.jpg";
+// import heroImage from "@/assets/hero-image.jpg";
 
 export function Hero() {
   return (
@@ -51,11 +51,12 @@ export function Hero() {
 
           <div className="relative animate-scale-in">
             <div className="absolute inset-0 bg-gradient-primary rounded-2xl blur-3xl opacity-20 animate-pulse-glow" />
-            <img
+            {/* <img
               src={heroImage}
               alt="SmartEduTrack Dashboard"
               className="relative rounded-2xl shadow-2xl w-full h-auto"
-            />
+            /> */}
+            <p>hero_img</p>
           </div>
         </div>
       </div>

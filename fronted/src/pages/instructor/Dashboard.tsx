@@ -150,7 +150,6 @@ export default function InstructorDashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
         <Card>
           <CardHeader>
             <CardTitle>Recent Student Activity</CardTitle>
