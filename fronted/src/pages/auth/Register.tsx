@@ -10,19 +10,47 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    first_name: "",
+    last_name:"",
     email: "",
     password: "",
     confirmPassword: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords don't match!");
       return;
     }
-    // TODO: Implement API call to register endpoint
+
+        try {
+          const response = await fetch("http://localhost:8000/api/register/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              first_name:formData.first_name,
+              last_name: formData.last_name,
+              email: formData.email,
+              password: formData.password,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("Account created successfully!");
+            console.log("User created:", data);
+          } else {
+            alert("Registration failed: " + JSON.stringify(data));
+          }
+        } catch (err) {
+          console.error("Error registering user:", err);
+          alert("An error occurred.");
+        };
+
     console.log("Registration attempt:", formData);
   };
 
@@ -44,18 +72,31 @@ export default function Register() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="first_name">Full Name</Label>
               <Input
-                id="name"
+                id="first_name"
                 type="text"
                 placeholder="Enter your full name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                value={formData.first_name}
+                onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
                 required
                 className="h-11"
               />
             </div>
             
+            <div className="space-y-2">
+              <Label htmlFor="last_name">Last Name</Label>
+              <Input
+                id="last_name"
+                type="text"
+                placeholder="Enter your full name"
+                value={formData.last_name}
+                onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
+                required
+                className="h-11"
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
