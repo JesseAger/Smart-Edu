@@ -10,7 +10,7 @@ class Category(models.Model):
 class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='instructor')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

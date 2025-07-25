@@ -4,7 +4,7 @@ from core.models import CustomUser
 class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name = "creator")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
