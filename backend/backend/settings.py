@@ -60,7 +60,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_ORIGINS = [
+        'https://localhost:8080',
+]
 
 REST_FRAMEWORK = {
    'DEFAULT_AUTHENTICATION_CLASSES': [
