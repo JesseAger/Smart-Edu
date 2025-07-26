@@ -17,7 +17,7 @@ export default function Login() {
     e.preventDefault();
     console.log("Login attempt:", formData);
     try { 
-    fetch("https://localhost/api/login", {
+    fetch("http://localhost:8000/api/login/", {
     method: "POST",
     headers: {
       Accept: "application/json, text/plain, */*",
@@ -35,7 +35,7 @@ export default function Login() {
         alert("Error Password or Email"); 
       } else {
         window.open(
-          "target.html"
+          "student/Dashboard"
         );
       }
     })
