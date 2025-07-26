@@ -34,11 +34,17 @@ export default function Login() {
       if (formData.error) {
         alert("Error Password or Email"); 
       } else {
-        window.open(
+        if (formData.role == "Student") {
+                  window.open(
           "student/Dashboard"
         );
+        } else {
+          window.open(
+            "instructor/Dashboard"
+          )
+        }
       }
-    })
+    });
   }
     catch{
       (err) => {

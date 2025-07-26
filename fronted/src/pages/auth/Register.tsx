@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select } from "@radix-ui/react-select";
 
 export default function Register() {
+
+  const roleIdSelect = useId();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name:"",
     email: "",
+    role:"",
     password: "",
     confirmPassword: ""
   });
@@ -34,6 +39,7 @@ export default function Register() {
               first_name:formData.first_name,
               last_name: formData.last_name,
               email: formData.email,
+              role:  formData.role,
               password: formData.password,
             }),
           });
@@ -76,7 +82,7 @@ export default function Register() {
               <Input
                 id="first_name"
                 type="text"
-                placeholder="Enter your full name"
+                placeholder="Enter your first name"
                 value={formData.first_name}
                 onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
                 required
@@ -89,7 +95,7 @@ export default function Register() {
               <Input
                 id="last_name"
                 type="text"
-                placeholder="Enter your full name"
+                placeholder="Enter your last name"
                 value={formData.last_name}
                 onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
                 required
@@ -109,7 +115,24 @@ export default function Register() {
                 className="h-11"
               />
             </div>
-            
+          <div className="space-y-2">
+            <Label htmlFor="role">Role</Label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, role: e.target.value }))
+              }
+              required
+              className="h-11 w-full border rounded px-3"
+            >
+              <option value="">Select a role</option>
+              <option value="student">Student</option>
+              <option value="instructor">Instructor</option>
+            </select>
+          </div>
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
