@@ -15,9 +15,40 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement API call to login endpoint
     console.log("Login attempt:", formData);
+    try { 
+    fetch("https://localhost/api/login", {
+    method: "POST",
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: formData.email,
+      password: formData.password,
+    }),
+  })
+    .then((response) => response.json())
+    .then((formData) => {
+      console.log(formData);
+      if (formData.error) {
+        alert("Error Password or Email"); 
+      } else {
+        window.open(
+          "target.html"
+        );
+      }
+    })
+  }
+    catch{
+      (err) => {
+      console.log(err);
+    
+    };
+    }
+
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-subtle px-4">
