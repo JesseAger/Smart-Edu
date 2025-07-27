@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,10 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
+    role:""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,6 +29,7 @@ export default function Login() {
     body: JSON.stringify({
       email: formData.email,
       password: formData.password,
+      role: formData.role,
     }),
   })
     .then((response) => response.json())
@@ -34,16 +38,16 @@ export default function Login() {
       if (formData.error) {
         alert("Error Password or Email"); 
       } else {
-        if (formData.role == "Student") {
-                  window.open(
-          "student/Dashboard"
-        );
+        if (formData.role === "Student") {
+                  navigate(
+          "/student/Dashboard"
+        )
         } else {
-          window.open(
-            "instructor/Dashboard"
+          navigate(
+            "/instructor/Dashboard"
           )
-        }
-      }
+        };
+      };
     });
   }
     catch{

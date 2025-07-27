@@ -96,7 +96,7 @@ export default function Register() {
                 id="last_name"
                 type="text"
                 placeholder="Enter your last name"
-                value={formData.last_name}
+                value={formData.last_name}  
                 onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
                 required
                 className="h-11"
@@ -128,8 +128,8 @@ export default function Register() {
               className="h-11 w-full border rounded px-3"
             >
               <option value="">Select a role</option>
-              <option value="student">Student</option>
-              <option value="instructor">Instructor</option>
+              <option value="Student">Student</option>
+              <option value="Instructor">Instructor</option>
             </select>
           </div>
 
