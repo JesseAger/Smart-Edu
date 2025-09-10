@@ -1,26 +1,26 @@
 from django.db import models
-from core.models import CustomUser
+from django.conf import settings
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
 
 class Course(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='instructor')
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="courses")
+    start_date = models.DateField()
+    end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
 class Enrollment(models.Model):
-    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="enrollments")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="enrollments")
     enrolled_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ['student', 'course']
+        unique_together = ("student", "course")
+
+    def __str__(self):
+        return f"{self.student} enrolled in {self.course}"
