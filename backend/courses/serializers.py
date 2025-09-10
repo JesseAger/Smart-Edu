@@ -1,19 +1,18 @@
 from rest_framework import serializers
-from .models import Course, Enrollment, Category
+from .models import Course, Enrollment
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
 
 class CourseSerializer(serializers.ModelSerializer):
     instructor = serializers.StringRelatedField()
 
     class Meta:
         model = Course
-        fields = '__all__'
+        fields = ["id", "title", "description", "instructor", "start_date", "end_date", "created_at", "updated_at"]
 
 class EnrollmentSerializer(serializers.ModelSerializer):
+    student = serializers.StringRelatedField()
+    course = serializers.StringRelatedField()
+
     class Meta:
         model = Enrollment
-        fields = '__all__'
+        fields = ["id", "student", "course", "enrolled_at"]
