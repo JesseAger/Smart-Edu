@@ -1,26 +1,36 @@
 from django.db import models
 from django.conf import settings
-
+from django.utils import timezone
 
 class Course(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="courses")
-    start_date = models.DateField()
-    end_date = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    duration = models.CharField(max_length=100)  # e.g. "12 weeks"
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.title
 
-class Enrollment(models.Model):
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="enrollments")
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="enrollments")
-    enrolled_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ("student", "course")
+class Application(models.Model):
+    PAYMENT_CHOICES = [
+        ('mpesa', 'M-Pesa'),
+        ('card', 'Credit/Debit Card'),
+    ]
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="applications")
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    motivation = models.TextField()
+    experience = models.TextField(blank=True, null=True)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
+    is_paid = models.BooleanField(default=False)
+    submitted_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.student} enrolled in {self.course}"
+        return f"{self.first_name} {self.last_name} - {self.course.title}"

@@ -7,8 +7,8 @@ import Index from "./pages/Index";
 import Programs from "./pages/Programs";
 import ProgramApplication from "./pages/ProgramApplication";
 import StudentDashboard from "./pages/StudentDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import InstructorDashboard from "./pages/InstructorDashboard";
+// import AdminDashboard from "./pages/AdminDashboard";
+// import InstructorDashboard from "./pages/InstructorDashboard";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Vacancies from "./pages/Vacancies";
@@ -27,8 +27,8 @@ const App = () => (
           <Route path="/programs" element={<Programs />} />
           <Route path="/apply/:programId" element={<ProgramApplication />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/instructor-dashboard" element={<InstructorDashboard />} />
+          {/* <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/instructor-dashboard" element={<InstructorDashboard />} /> */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/vacancies" element={<Vacancies />} />

@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from courses.models import Course, Enrollment
+from courses.models import Course
 
 
 class Payment(models.Model):

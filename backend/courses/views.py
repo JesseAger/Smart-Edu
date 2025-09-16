@@ -1,14 +1,22 @@
-from rest_framework import viewsets, permissions
-from .models import Course, Enrollment
-from .serializers import CourseSerializer, EnrollmentSerializer
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Course, Application
+from .serializers import CourseSerializer, ApplicationSerializer
 
-
-class CourseViewSet(viewsets.ModelViewSet):
+class CourseListView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-class EnrollmentViewSet(viewsets.ModelViewSet):
-    queryset = Enrollment.objects.all()
-    serializer_class = EnrollmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
+class ApplicationCreateView(generics.CreateAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        # Later: trigger payment or send confirmation email here
+        return Response(
+            {"message": "Application submitted successfully", "data": response.data},
+            status=status.HTTP_201_CREATED
+        )

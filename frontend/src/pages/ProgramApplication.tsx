@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 
 const programs = [
@@ -23,7 +23,7 @@ const programs = [
     skills: ["React", "Node.js", "MongoDB", "Express", "HTML/CSS", "JavaScript"]
   },
   {
-    id: "2", 
+    id: "2",
     title: "Data Science & Analytics",
     description: "Master data analysis, machine learning, and statistical modeling",
     duration: "16 weeks",
@@ -34,7 +34,7 @@ const programs = [
     id: "3",
     title: "Mobile App Development",
     description: "Build native iOS and Android applications",
-    duration: "14 weeks", 
+    duration: "14 weeks",
     cost: "$3,299",
     skills: ["React Native", "Swift", "Kotlin", "Firebase", "UI/UX", "App Store"]
   },
@@ -43,7 +43,7 @@ const programs = [
     title: "Cybersecurity Fundamentals",
     description: "Learn ethical hacking, network security, and digital forensics",
     duration: "10 weeks",
-    cost: "$2,799", 
+    cost: "$2,799",
     skills: ["Network Security", "Ethical Hacking", "Cryptography", "Risk Assessment", "Compliance"]
   }
 ];
@@ -52,13 +52,15 @@ const countries = [
   "Kenya", "Uganda", "Tanzania", "Rwanda", "Burundi", "South Sudan", "Ethiopia", "Somalia", "Other"
 ];
 
+const API_BASE = "http://127.0.0.1:8000/api";
+
 const ProgramApplication = () => {
   const { programId } = useParams();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
 
-  const program = programs.find(p => p.id === programId);
+  const program = programs.find((p) => p.id === programId);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -70,7 +72,6 @@ const ProgramApplication = () => {
     country: "",
     motivation: "",
     experience: "",
-    paymentMethod: ""
   });
 
   if (!program) {
@@ -91,7 +92,7 @@ const ProgramApplication = () => {
   }
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,22 +100,26 @@ const ProgramApplication = () => {
     setIsSubmitting(true);
 
     try {
-      // API call to submit application
       const applicationData = {
-        ...formData,
-        programId: program.id,
-        programTitle: program.title,
-        programCost: program.cost,
-        submittedAt: new Date().toISOString()
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        country: formData.country,
+        motivation: formData.motivation,
+        experience: formData.experience,
+        payment_method: paymentMethod,
+        program: program.id, 
       };
 
-      // Replace with actual API endpoint
-      const response = await fetch('/api/applications', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE}/applications/`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(applicationData)
+        body: JSON.stringify(applicationData),
       });
 
       if (response.ok) {
@@ -122,19 +127,22 @@ const ProgramApplication = () => {
           title: "Application Submitted",
           description: "We'll review your application and get back to you soon!",
         });
-        
-        // Process payment if needed
+
+        console.log(applicationData);
+
         if (paymentMethod) {
           await handlePayment();
         }
+
       } else {
-        throw new Error('Failed to submit application');
+        const errData = await response.json();
+        throw new Error(JSON.stringify(errData));
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to submit application. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -144,39 +152,36 @@ const ProgramApplication = () => {
   const handlePayment = async () => {
     try {
       const paymentData = {
-        programId: program.id,
-        amount: program.cost,
-        paymentMethod: paymentMethod,
-        studentEmail: formData.email,
-        studentPhone: formData.phone
+        program: program.id,
+        amount: program.cost.replace(/[^0-9.]/g, ""), // strip $ sign
+        method: paymentMethod,
+        email: formData.email,
+        phone: formData.phone,
       };
 
-      // Replace with actual payment API endpoint
-      const response = await fetch('/api/payments/create-session', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE}/payments/`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(paymentData)
+        body: JSON.stringify(paymentData),
       });
 
       const data = await response.json();
-      
-      if (paymentMethod === 'mpesa') {
-        // Handle M-Pesa payment flow
+
+      if (paymentMethod === "mpesa") {
         toast({
           title: "M-Pesa Payment",
           description: "Please check your phone for the payment prompt.",
         });
-      } else {
-        // Redirect to Stripe or other card payment processor
-        window.location.href = data.paymentUrl;
+      } else if (data.payment_url) {
+        window.location.href = data.payment_url;
       }
     } catch (error) {
       toast({
         title: "Payment Error",
         description: "Failed to process payment. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -197,7 +202,9 @@ const ProgramApplication = () => {
               </div>
               <div className="flex flex-wrap gap-2 mt-4">
                 {program.skills.map((skill) => (
-                  <Badge key={skill} variant="default">{skill}</Badge>
+                  <Badge key={skill} variant="default">
+                    {skill}
+                  </Badge>
                 ))}
               </div>
             </CardHeader>
@@ -222,7 +229,7 @@ const ProgramApplication = () => {
                       <Input
                         id="firstName"
                         value={formData.firstName}
-                        onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        onChange={(e) => handleInputChange("firstName", e.target.value)}
                         required
                       />
                     </div>
@@ -231,7 +238,7 @@ const ProgramApplication = () => {
                       <Input
                         id="lastName"
                         value={formData.lastName}
-                        onChange={(e) => handleInputChange('lastName', e.target.value)}
+                        onChange={(e) => handleInputChange("lastName", e.target.value)}
                         required
                       />
                     </div>
@@ -241,7 +248,7 @@ const ProgramApplication = () => {
                         id="email"
                         type="email"
                         value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onChange={(e) => handleInputChange("email", e.target.value)}
                         required
                       />
                     </div>
@@ -251,7 +258,7 @@ const ProgramApplication = () => {
                         id="phone"
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        onChange={(e) => handleInputChange("phone", e.target.value)}
                         required
                       />
                     </div>
@@ -269,7 +276,7 @@ const ProgramApplication = () => {
                       <Input
                         id="address"
                         value={formData.address}
-                        onChange={(e) => handleInputChange('address', e.target.value)}
+                        onChange={(e) => handleInputChange("address", e.target.value)}
                         required
                       />
                     </div>
@@ -278,13 +285,13 @@ const ProgramApplication = () => {
                       <Input
                         id="city"
                         value={formData.city}
-                        onChange={(e) => handleInputChange('city', e.target.value)}
+                        onChange={(e) => handleInputChange("city", e.target.value)}
                         required
                       />
                     </div>
                     <div>
                       <Label htmlFor="country">Country *</Label>
-                      <Select onValueChange={(value) => handleInputChange('country', value)}>
+                      <Select onValueChange={(value) => handleInputChange("country", value)}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select your country" />
                         </SelectTrigger>
@@ -311,7 +318,7 @@ const ProgramApplication = () => {
                       <Textarea
                         id="motivation"
                         value={formData.motivation}
-                        onChange={(e) => handleInputChange('motivation', e.target.value)}
+                        onChange={(e) => handleInputChange("motivation", e.target.value)}
                         placeholder="Tell us about your motivation and goals..."
                         required
                       />
@@ -321,7 +328,7 @@ const ProgramApplication = () => {
                       <Textarea
                         id="experience"
                         value={formData.experience}
-                        onChange={(e) => handleInputChange('experience', e.target.value)}
+                        onChange={(e) => handleInputChange("experience", e.target.value)}
                         placeholder="Describe any relevant experience or education..."
                       />
                     </div>
@@ -360,7 +367,7 @@ const ProgramApplication = () => {
           </Card>
         </div>
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
