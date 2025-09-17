@@ -31,6 +31,7 @@ class Application(models.Model):
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
     is_paid = models.BooleanField(default=False)
     submitted_at = models.DateTimeField(default=timezone.now)
+    application_status= models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.course.title}"
