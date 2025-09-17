@@ -36,6 +36,7 @@ const Programs = () => {
     fetchPrograms();
   }, []);
 
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -91,7 +92,7 @@ const Programs = () => {
                 
                 <div className="mt-auto">
                   <Button className="w-full" asChild>
-                    <Link to={`/apply/${program.title}`}>Apply Now</Link>
+                    <Link to={`/apply/${program.id}`}>Apply Now</Link>
                   </Button>
                 </div>
               </CardContent>

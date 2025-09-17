@@ -32,6 +32,7 @@ const Apply = () => {
     payment_method: "mpesa", // default
   });
 
+
   useEffect(() => {
     const fetchProgram = async () => {
       try {
