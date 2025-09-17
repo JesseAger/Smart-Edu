@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,41 +6,43 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Clock, DollarSign } from "lucide-react";
 
+const API_BASE = "http://127.0.0.1:8000/api";
+
+interface Program {
+  id: number;
+  title: string;
+  description: string;
+  duration: string;
+  cost: string; 
+  skills: string[];
+}
+
 const Programs = () => {
-  const programs = [
-    {
-      id: 1,
-      title: "Data Science Bootcamp",
-      description: "Master data analysis, machine learning, and statistical modeling with Python and R. Learn to extract insights from complex datasets and build predictive models.",
-      duration: "6 months",
-      cost: "$2,500",
-      skills: ["Python", "R", "Machine Learning", "SQL", "Tableau", "Statistics"]
-    },
-    {
-      id: 2,
-      title: "Software Development",
-      description: "Full-stack web development using modern technologies. Build responsive web applications and learn both frontend and backend development.",
-      duration: "8 months",
-      cost: "$3,000",
-      skills: ["React", "Node.js", "JavaScript", "HTML/CSS", "MongoDB", "Git"]
-    },
-    {
-      id: 3,
-      title: "Cyber Security",
-      description: "Comprehensive cybersecurity training covering network security, ethical hacking, risk assessment, and security compliance.",
-      duration: "5 months",
-      cost: "$2,800",
-      skills: ["Network Security", "Penetration Testing", "Risk Assessment", "Compliance", "Incident Response"]
-    },
-    {
-      id: 4,
-      title: "System DevOps",
-      description: "Learn infrastructure automation, continuous integration/deployment, cloud platforms, and container orchestration.",
-      duration: "4 months",
-      cost: "$2,200",
-      skills: ["Docker", "Kubernetes", "AWS", "CI/CD", "Linux", "Terraform"]
-    }
-  ];
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/courses/`);
+        const data = await response.json();
+        setPrograms(data);
+      } catch (error) {
+        console.error("Error fetching programs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPrograms();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg">Loading programs...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,7 +81,7 @@ const Programs = () => {
                 <div className="mb-6">
                   <h4 className="font-semibold mb-2">Skills you'll learn:</h4>
                   <div className="flex flex-wrap gap-2">
-                    {program.skills.map((skill, index) => (
+                    {program.skills?.map((skill, index) => (
                       <Badge key={index} variant="secondary">
                         {skill}
                       </Badge>
@@ -88,7 +91,7 @@ const Programs = () => {
                 
                 <div className="mt-auto">
                   <Button className="w-full" asChild>
-                    <Link to={`/apply/${program.id}`}>Apply Now</Link>
+                    <Link to={`/apply/${program.title}`}>Apply Now</Link>
                   </Button>
                 </div>
               </CardContent>
