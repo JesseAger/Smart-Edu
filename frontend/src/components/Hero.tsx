@@ -18,7 +18,7 @@ const Hero = () => {
             <Link to="/programs">Explore Programs</Link>
           </Button>
           <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
-            <Link to="/apply">Apply Today</Link>
+            <Link to="/programs">Apply Today</Link>
           </Button>
         </div>
       </div>

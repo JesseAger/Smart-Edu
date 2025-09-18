@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { Clock, DollarSign } from "lucide-react";
+import { Clock, DollarSign, HandCoins } from "lucide-react";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
@@ -74,7 +74,7 @@ const Programs = () => {
                     <span className="text-sm text-muted-foreground">{program.duration}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <HandCoins className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">{program.cost}</span>
                   </div>
                 </div>
