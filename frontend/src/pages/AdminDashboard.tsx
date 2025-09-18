@@ -3,8 +3,52 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Users, BookOpen, GraduationCap, DollarSign, Star, UserX, AlertTriangle } from "lucide-react";
+import { useState, useEffect } from "react";
+import Index from "./Index";
+import CreateInstructor from "./createInstructor";
+import { Link } from "react-router-dom";
+
+const API_BASE = "http://127.0.0.1:8000/api";
+
+interface Application{
+  id: number;
+  course: string;
+  is_paid: boolean;
+  submitted_at: string;
+  application_status: boolean;
+}
+
 
 const AdminDashboard = () => {
+
+  const [application, setApplication] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/applicants/`);
+        const data = await response.json();
+        setApplication(data);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchApplications();
+  }, []);
+
+
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center">
+  //       <p className="text-lg">Loading programs...</p>
+  //     </div>
+  //   );
+  // }
+
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
@@ -13,16 +57,21 @@ const AdminDashboard = () => {
           <p className="text-muted-foreground">Manage instructors, students, and system analytics</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Students</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">245</div>
+
+              <CardContent>
+              <div className="text-2xl font-bold"> 
+              {Array.isArray(application) ? application.length : 0}
+              
+              </div>
               <p className="text-xs text-muted-foreground">+12% from last month</p>
             </CardContent>
+
           </Card>
 
           <Card>
@@ -130,7 +179,11 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <Button>Add New Instructor</Button>
+                  <Button className="w-full" asChild> 
+                    <a href="add-instructor">
+                    Add New Instructor 
+                    </a>
+                    </Button>
                   <div className="space-y-4">
                     {[
                       { name: "Dr. Emily Clark", courses: ["Data Science", "DevOps"], students: 45, status: "Active" },

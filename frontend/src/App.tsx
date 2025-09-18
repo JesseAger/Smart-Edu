@@ -13,6 +13,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Vacancies from "./pages/Vacancies";
 import NotFound from "./pages/NotFound";
+import CreateInstructor from "./pages/createInstructor";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/vacancies" element={<Vacancies />} />
+          <Route path="add-instructor" element={<CreateInstructor />}  />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
