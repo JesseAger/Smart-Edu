@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Course, Application
 from .serializers import CourseSerializer, ApplicationSerializer
-from django.http import HttpResponse
+
 
 class CourseListView(generics.ListAPIView):
     queryset = Course.objects.all()
