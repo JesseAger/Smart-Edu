@@ -2,9 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
-
-
-
 class User(AbstractUser):
     class Roles(models.TextChoices):
         STUDENT = "STUDENT", "Student"
