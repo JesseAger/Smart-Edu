@@ -82,9 +82,9 @@ const Programs = () => {
                 <div className="mb-6">
                   <h4 className="font-semibold mb-2">Skills you'll learn:</h4>
                   <div className="flex flex-wrap gap-2">
-                    {program.skills?.map((skill, index) => (
+                    {program.modules?.map((module, index) => (
                       <Badge key={index} variant="secondary">
-                        {skill}
+                        {module}
                       </Badge>
                     ))}
                   </div>

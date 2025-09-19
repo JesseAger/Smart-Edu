@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, FileText, User, DollarSign, Award, Bell } from "lucide-react";
+import { BookOpen, FileText, User, DollarSign, Award, Bell, HandCoins } from "lucide-react";
 
 const StudentDashboard = () => {
   return (
@@ -11,7 +11,7 @@ const StudentDashboard = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Student Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, John Doe</p>
+          <p className="text-muted-foreground">Welcome back!</p>
         </div>
 
         <Tabs defaultValue="modules" className="space-y-6">
@@ -29,7 +29,7 @@ const StudentDashboard = () => {
               Profile
             </TabsTrigger>
             <TabsTrigger value="finances" className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4" />
+              <HandCoins className="h-4 w-4" />
               Finances
             </TabsTrigger>
             <TabsTrigger value="certificates" className="flex items-center gap-2">
