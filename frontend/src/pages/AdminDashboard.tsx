@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
-interface Application{
+interface Application {
   id: number;
   course: string;
   is_paid: boolean;
@@ -18,18 +18,16 @@ interface Application{
   application_status: boolean;
 }
 
-interface Program{
+interface Program {
   id: number;
   title: string;
   description: string;
   duration: string;
   cost: number;
-  skills:string[];
-
+  skills: string[];
 }
 
 const AdminDashboard = () => {
-
   const [application, setApplication] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -50,24 +48,22 @@ const AdminDashboard = () => {
     fetchApplications();
   }, []);
 
-
   useEffect(() => {
     const fetchPrograms = async () => {
-      try{
+      try {
         const res = await fetch(`${API_BASE}/courses/`);
         const data = await res.json();
         setPrograms(data);
-      } catch(error) {
+      } catch (error) {
         console.error("Error fetching programs:", error);
       } finally {
         setLoading(false);
       }
     };
     fetchPrograms();
-    if(loading){
-      setLoading(true)
+    if (loading) {
+      setLoading(true);
     }
-    
   }, []);
 
   return (
@@ -78,21 +74,18 @@ const AdminDashboard = () => {
           <p className="text-muted-foreground">Manage instructors, students, and system analytics</p>
         </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Students</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-
-              <CardContent>
-              <div className="text-2xl font-bold"> 
-              {Array.isArray(application) ? application.length : 0}
-              
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {Array.isArray(application) ? application.length : 0}
               </div>
               <p className="text-xs text-muted-foreground">+12% from last month</p>
             </CardContent>
-
           </Card>
 
           <Card>
@@ -113,7 +106,9 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">4</div>
-              <p className="text-xs text-muted-foreground">Data Science, Software Dev, Cyber Security, DevOps</p>
+              <p className="text-xs text-muted-foreground">
+                Data Science, Software Dev, Cyber Security, DevOps
+              </p>
             </CardContent>
           </Card>
 
@@ -147,20 +142,61 @@ const AdminDashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { name: "John Doe", course: "Data Science", regNo: "DS2024001", status: "Active", payment: "Paid" },
-                    { name: "Jane Smith", course: "Software Development", regNo: "SD2024001", status: "Active", payment: "Pending" },
-                    { name: "Mike Johnson", course: "Cyber Security", regNo: "CS2024001", status: "Suspended", payment: "Paid" },
-                    { name: "Sarah Wilson", course: "DevOps", regNo: "DO2024001", status: "Ready for Graduation", payment: "Paid" }
+                    {
+                      name: "John Doe",
+                      course: "Data Science",
+                      regNo: "DS2024001",
+                      status: "Active",
+                      payment: "Paid",
+                    },
+                    {
+                      name: "Jane Smith",
+                      course: "Software Development",
+                      regNo: "SD2024001",
+                      status: "Active",
+                      payment: "Pending",
+                    },
+                    {
+                      name: "Mike Johnson",
+                      course: "Cyber Security",
+                      regNo: "CS2024001",
+                      status: "Suspended",
+                      payment: "Paid",
+                    },
+                    {
+                      name: "Sarah Wilson",
+                      course: "DevOps",
+                      regNo: "DO2024001",
+                      status: "Ready for Graduation",
+                      payment: "Paid",
+                    },
                   ].map((student, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="space-y-1">
                         <p className="font-medium">{student.name}</p>
-                        <p className="text-sm text-muted-foreground">Reg: {student.regNo} | {student.course}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Reg: {student.regNo} | {student.course}
+                        </p>
                         <div className="flex gap-2">
-                          <Badge variant={student.status === "Active" ? "default" : student.status === "Suspended" ? "destructive" : "secondary"}>
+                          <Badge
+                            variant={
+                              student.status === "Active"
+                                ? "default"
+                                : student.status === "Suspended"
+                                ? "destructive"
+                                : "secondary"
+                            }
+                          >
                             {student.status}
                           </Badge>
-                          <Badge variant={student.payment === "Paid" ? "default" : "outline"}>
+                          <Badge
+                            variant={
+                              student.payment === "Paid" ? "default" : "outline"
+                            }
+                          >
                             {student.payment}
                           </Badge>
                         </div>
@@ -200,45 +236,60 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {/* <Button className="w-full" asChild> 
-                    <a href="add-instructor">
-                    Add New Instructor 
-                    </a>
-                    </Button> */}
-
                   <Button className="w-full" onClick={() => setIsOpen(true)}>
                     Add New Instructor
                   </Button>
 
-                      {isOpen && (
-                        <div
-                          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                          onClick={() => setIsOpen(false)}
-                        />
-                          <div
-                            className="bg-white rounded-2xl shadow-lg p-6 w-96 transform transition-all duration-300 animate-fadeIn"
-                            onClick={(e) => e.stopPropagation()}
-                          > </>
-                            <h2 className="text-xl font-semibold mb-4">Add Instructor</h2>
-                            <CreateInstructorForm onSubmitSuccess={() => setIsOpen(false)} />
-
+                  {isOpen && (
+                    <div
+                      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <div
+                        className="bg-white rounded-2xl shadow-lg p-6 w-96 transform transition-all duration-300 animate-fadeIn"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <h2 className="text-xl font-semibold mb-4">Add Instructor</h2>
+                        <CreateInstructorForm onSubmitSuccess={() => setIsOpen(false)} />
                         <div className="flex justify-end mt-4">
-                            <Button variant="secondary" onClick={() => setIsOpen(false)}>
-                              Cancel
-                            </Button>
+                          <Button variant="secondary" onClick={() => setIsOpen(false)}>
+                            Cancel
+                          </Button>
                         </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="space-y-4">
                     {[
-                      { name: "Dr. Emily Clark", courses: ["Data Science", "DevOps"], students: 45, status: "Active" },
-                      { name: "Prof. David Lee", courses: ["Software Development"], students: 38, status: "Active" },
-                      { name: "Ms. Rachel Green", courses: ["Cyber Security"], students: 32, status: "Active" }
+                      {
+                        name: "Dr. Emily Clark",
+                        courses: ["Data Science", "DevOps"],
+                        students: 45,
+                        status: "Active",
+                      },
+                      {
+                        name: "Prof. David Lee",
+                        courses: ["Software Development"],
+                        students: 38,
+                        status: "Active",
+                      },
+                      {
+                        name: "Ms. Rachel Green",
+                        courses: ["Cyber Security"],
+                        students: 32,
+                        status: "Active",
+                      },
                     ].map((instructor, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
                         <div className="space-y-1">
                           <p className="font-medium">{instructor.name}</p>
                           <p className="text-sm text-muted-foreground">
-                            Courses: {instructor.courses.join(", ")} | Students: {instructor.students}
+                            Courses: {instructor.courses.join(", ")} | Students:{" "}
+                            {instructor.students}
                           </p>
                           <Badge variant="default">{instructor.status}</Badge>
                         </div>
@@ -260,8 +311,7 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
-  {/* course management  */}
-
+          {/* course management  */}
           <TabsContent value="courses" className="space-y-4">
             <Card>
               <CardHeader>
@@ -269,11 +319,9 @@ const AdminDashboard = () => {
                 <CardDescription>Monitor course enrollments and assignments</CardDescription>
               </CardHeader>
               <CardContent>
-                    <Button className="w-full mb-3" asChild> 
-                    <a href="#">
-                    Add New Program 
-                    </a>
-                    </Button>
+                <Button className="w-full mb-3" asChild>
+                  <a href="#">Add New Program</a>
+                </Button>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {programs.map((program, index) => (
                     <Card key={index}>
@@ -354,15 +402,34 @@ const AdminDashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { name: "Sarah Wilson", course: "DevOps", regNo: "DO2024001", completionDate: "2024-12-15" },
-                    { name: "Mark Taylor", course: "Data Science", regNo: "DS2024015", completionDate: "2024-12-20" },
-                    { name: "Lisa Brown", course: "Cyber Security", regNo: "CS2024008", completionDate: "2024-12-18" }
+                    {
+                      name: "Sarah Wilson",
+                      course: "DevOps",
+                      regNo: "DO2024001",
+                      completionDate: "2024-12-15",
+                    },
+                    {
+                      name: "Mark Taylor",
+                      course: "Data Science",
+                      regNo: "DS2024015",
+                      completionDate: "2024-12-20",
+                    },
+                    {
+                      name: "Lisa Brown",
+                      course: "Cyber Security",
+                      regNo: "CS2024008",
+                      completionDate: "2024-12-18",
+                    },
                   ].map((student, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="space-y-1">
                         <p className="font-medium">{student.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          Reg: {student.regNo} | {student.course} | Completed: {student.completionDate}
+                          Reg: {student.regNo} | {student.course} | Completed:{" "}
+                          {student.completionDate}
                         </p>
                       </div>
                       <Button>

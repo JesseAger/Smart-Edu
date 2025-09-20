@@ -13,7 +13,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Vacancies from "./pages/Vacancies";
 import NotFound from "./pages/NotFound";
-import CreateInstructor from "./pages/createInstructor";
+import CreateInstructorForm from "./pages/createInstructor";
 import StudentLogin from "./pages/StudentLogin";
 import InstructorLogin from "./pages/InstructorLogin";
 import AdminLogin from "./pages/AdminLogin";
@@ -38,7 +38,8 @@ const App = () => (
           <Route path="/vacancies" element={<Vacancies />} />
           <Route path="/student-login" element={<StudentLogin />} />
           <Route path="/instructor-login" element={<InstructorLogin />} />
-          <Route path="admin-login" element={<AdminLogin />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/add-instructor" element={<CreateInstructorForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
