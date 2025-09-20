@@ -9,22 +9,50 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const StudentLogin = () => {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     registrationNumber: "",
-    password: "",
+    currentPassword: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Auth
-    console.log("Student login attempt:", formData);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    
+      console.log("Student login attempt:", formData);
+      try{
+          const response = await fetch('http://localhost:8000/login',
+            {
+              'method': 'POST',
+              headers:{
+                'Content-Type':'application/json',
+              },
+              body: JSON.stringify({ formData }),
+
+            });
+          if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
+      const data = await response.json();
+      console.log('Login successful:', data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+
   };
 
   return (
@@ -57,12 +85,12 @@ const StudentLogin = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="currentPassword">Password</Label>
                   <Input
-                    id="password"
-                    name="password"
+                    id="currentPassword"
+                    name="currentPassword"
                     type="password"
-                    value={formData.password}
+                    value={formData.currentPassword}
                     onChange={handleChange}
                     placeholder="Enter your password"
                     required
