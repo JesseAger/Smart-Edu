@@ -18,11 +18,21 @@ interface Application{
   application_status: boolean;
 }
 
+interface Program{
+  id: number;
+  title: string;
+  description: string;
+  duration: string;
+  cost: number;
+  skills:string[];
+
+}
 
 const AdminDashboard = () => {
 
   const [application, setApplication] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [programs, setPrograms] = useState<Program[]>([]);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -40,13 +50,21 @@ const AdminDashboard = () => {
   }, []);
 
 
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center">
-  //       <p className="text-lg">Loading programs...</p>
-  //     </div>
-  //   );
-  // }
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try{
+        const res = await fetch(`${API_BASE}/courses/`);
+        const data = await res.json();
+        setPrograms(data);
+      } catch(error) {
+        console.error("Error fetching programs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPrograms();
+
+  }, []);
 
 
   return (
@@ -216,6 +234,8 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
+  {/* course management  */}
+
           <TabsContent value="courses" className="space-y-4">
             <Card>
               <CardHeader>
@@ -223,22 +243,22 @@ const AdminDashboard = () => {
                 <CardDescription>Monitor course enrollments and assignments</CardDescription>
               </CardHeader>
               <CardContent>
+                    <Button className="w-full mb-3" asChild> 
+                    <a href="#">
+                    Add New Program 
+                    </a>
+                    </Button>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    { name: "Data Science", enrolled: 65, instructor: "Dr. Emily Clark", duration: "6 months" },
-                    { name: "Software Development", enrolled: 82, instructor: "Prof. David Lee", duration: "8 months" },
-                    { name: "Cyber Security", enrolled: 48, instructor: "Ms. Rachel Green", duration: "7 months" },
-                    { name: "DevOps", enrolled: 50, instructor: "Dr. Emily Clark", duration: "5 months" }
-                  ].map((course, index) => (
+                  {programs.map((program, index) => (
                     <Card key={index}>
                       <CardHeader>
-                        <CardTitle className="text-lg">{course.name}</CardTitle>
-                        <CardDescription>Instructor: {course.instructor}</CardDescription>
+                        <CardTitle className="text-lg">{program.title}</CardTitle>
+                        <CardDescription>Instructor: Null</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
-                          <p className="text-sm">Enrolled Students: {course.enrolled}</p>
-                          <p className="text-sm">Duration: {course.duration}</p>
+                          <p className="text-sm">Enrolled Students: Null</p>
+                          <p className="text-sm">Duration: {program.duration}</p>
                         </div>
                       </CardContent>
                     </Card>

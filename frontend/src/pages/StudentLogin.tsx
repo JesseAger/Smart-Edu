@@ -31,7 +31,7 @@ const StudentLogin = () => {
     
       console.log("Student login attempt:", formData);
       try{
-          const response = await fetch('http://localhost:8000/login',
+          const response = await fetch('http://localhost:8000/student-login',
             {
               'method': 'POST',
               headers:{

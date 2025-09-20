@@ -14,12 +14,6 @@ const InstructorLogin = () => {
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Auth
-    console.log("Instructor login attempt:", formData);
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -27,6 +21,29 @@ const InstructorLogin = () => {
     });
   };
 
+ 
+    const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    console.log("Instructor login attempt:", formData);
+
+   try {
+      const response = await fetch('http:/localhost:8000/instructor-login', {
+      'method':'POST',
+      headers:{
+        'Content-Type':'application/json',
+      },
+      body:JSON.stringify({ formData })
+    });
+    if (!response.ok){
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Login Failed!');
+    }
+
+  } catch (error){
+    console.log(error.message);
+  }
+    }
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
