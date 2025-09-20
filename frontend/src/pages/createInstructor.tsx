@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
@@ -10,7 +10,15 @@ interface InstructorFormProps {
   onSubmitSuccess?: () => void;
 }
 
+interface Program{
+  id:number;
+  title:string;
+}
+
+
 const CreateInstructorForm = ({ onSubmitSuccess }: InstructorFormProps) => {
+  const [programs, setPrograms] =useState<Program[]>([]);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: "",
     first_name: "",
@@ -22,6 +30,24 @@ const CreateInstructorForm = ({ onSubmitSuccess }: InstructorFormProps) => {
     experience: "",
   });
 
+    useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/courses/`);
+        const data = await res.json();
+        setPrograms(data);
+      } catch (error) {
+        console.error("Error fetching programs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPrograms();
+    if (loading) {
+      setLoading(true);
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -31,7 +57,6 @@ const CreateInstructorForm = ({ onSubmitSuccess }: InstructorFormProps) => {
     console.log(formData);
 
     try {
-      // Example POST request
       const res = await fetch(`${API_BASE}/instructors/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,7 +109,21 @@ const CreateInstructorForm = ({ onSubmitSuccess }: InstructorFormProps) => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="department">Department</Label>
-            <Input id="department" name="department" value={formData.department} onChange={handleChange} required />
+            <select
+              id="department"
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              required
+              className="w-full border rounded-md p-2"
+            >
+              <option value="">-- Select Department --</option>
+              {programs.map((program: any) => (
+                <option key={program.id} value={program.id}>
+                  {program.title}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
