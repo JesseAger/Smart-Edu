@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Users, BookOpen, GraduationCap, DollarSign, Star, UserX, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 import Index from "./Index";
-import CreateInstructor from "./createInstructor";
+import CreateInstructorForm from "./createInstructor";
 import { Link } from "react-router-dom";
 
 const API_BASE = "http://127.0.0.1:8000/api";
@@ -33,6 +33,7 @@ const AdminDashboard = () => {
   const [application, setApplication] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -63,9 +64,11 @@ const AdminDashboard = () => {
       }
     };
     fetchPrograms();
-
+    if(loading){
+      setLoading(true)
+    }
+    
   }, []);
-
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -197,11 +200,34 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <Button className="w-full" asChild> 
+                  {/* <Button className="w-full" asChild> 
                     <a href="add-instructor">
                     Add New Instructor 
                     </a>
-                    </Button>
+                    </Button> */}
+
+                  <Button className="w-full" onClick={() => setIsOpen(true)}>
+                    Add New Instructor
+                  </Button>
+
+                      {isOpen && (
+                        <div
+                          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                          onClick={() => setIsOpen(false)}
+                        />
+                          <div
+                            className="bg-white rounded-2xl shadow-lg p-6 w-96 transform transition-all duration-300 animate-fadeIn"
+                            onClick={(e) => e.stopPropagation()}
+                          > </>
+                            <h2 className="text-xl font-semibold mb-4">Add Instructor</h2>
+                            <CreateInstructorForm onSubmitSuccess={() => setIsOpen(false)} />
+
+                        <div className="flex justify-end mt-4">
+                            <Button variant="secondary" onClick={() => setIsOpen(false)}>
+                              Cancel
+                            </Button>
+                        </div>
+
                   <div className="space-y-4">
                     {[
                       { name: "Dr. Emily Clark", courses: ["Data Science", "DevOps"], students: 45, status: "Active" },
