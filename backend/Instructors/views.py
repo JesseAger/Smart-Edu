@@ -14,6 +14,8 @@ class AddInstructorView(generics.CreateAPIView):
             {"message": "Instructor Added Successfully", "data": response.data},
             status=status.HTTP_201_CREATED
         )
-
+class GetInstructorView(generics.ListAPIView):
+    queryset = Instructor.objects.all()
+    serializer_class = InstructorSerializer
     
 

@@ -2,20 +2,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Users, BookOpen, GraduationCap, DollarSign, Star, UserX, AlertTriangle } from "lucide-react";
+import { Users, BookOpen, GraduationCap, DollarSign, Star, UserX, AlertTriangle, Eye, CheckIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import Index from "./Index";
 import CreateInstructorForm from "./createInstructor";
-import { Link } from "react-router-dom";
+import { text } from "stream/consumers";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
 interface Application {
   id: number;
+  first_name: String;
+  last_name: String;
   course: string;
   is_paid: boolean;
   submitted_at: string;
   application_status: boolean;
+  payment_method: string;
 }
 
 interface Program {
@@ -27,11 +30,21 @@ interface Program {
   skills: string[];
 }
 
+interface Instructor{
+  id: number;
+  title: string;
+  first_name: string;
+  last_name: string;
+  department: string;
+
+}
+
 const AdminDashboard = () => {
   const [application, setApplication] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState<Instructor[]>([]);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -66,6 +79,26 @@ const AdminDashboard = () => {
     }
   }, []);
 
+
+  useEffect(() => {
+    const fetchInstructor = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/get-instructors/`);
+        const data = await res.json();
+        setActive(data);
+      } catch (error) {
+        console.error("Error fetching programs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInstructor();
+    if (loading) {
+      setLoading(true);
+    }
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
@@ -94,7 +127,9 @@ const AdminDashboard = () => {
               <GraduationCap className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">18</div>
+              <div className="text-2xl font-bold">
+                {Array.isArray(active) ? active.length : 0}
+              </div>
               <p className="text-xs text-muted-foreground">+2 new this month</p>
             </CardContent>
           </Card>
@@ -126,12 +161,81 @@ const AdminDashboard = () => {
 
         <Tabs defaultValue="students" className="space-y-4">
           <TabsList>
+            <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="instructors">Instructors</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="graduation">Graduation Approvals</TabsTrigger>
           </TabsList>
+
+
+        <TabsContent value="applications" className="space-y-4">
+          <Card>
+                <CardHeader>
+                  <CardTitle>Student Applictions Management</CardTitle>
+                  <CardDescription>Manage Applications to Active Courses made by Students</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {application.map((application, index)=>(
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
+                      <div className="space-y-1">
+                        <p className="font-medium">{application.last_name} {application.first_name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Date: {application.submitted_at} | {application.course}
+                        </p>
+                        <div className="flex gap-2">
+                          <Badge
+                            variant={
+                              application.application_status === true
+                                ? "default"
+                                : application.application_status === false
+                                
+                                ? "destructive"
+                                : "secondary"
+                            }
+                          >
+                            {application.application_status}
+                          </Badge>
+                          <Badge
+                            variant={
+                              application.is_paid === true ? "default" : "outline"
+                            }
+                          >
+                            {application.payment_method}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          <Eye className="h-4 w-4 mr-1" />
+                          View Application Details
+                        </Button>
+                        {/* <Button variant="outline" size="sm">
+                          <AlertTriangle className="h-4 w-4 mr-1" />
+                          Approve Application
+                        </Button> */}
+                        <Button variant="destructive" size="sm">
+                          <UserX className="h-4 w-4 mr-1" />
+                          Reject Application
+                        </Button>
+                        {application.application_status === false && (
+                          <Button size="sm">
+                            <CheckIcon className="h-4 w-4 mr-1" />
+                            Approve Application
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </CardContent>
+          </Card>
+
+        </TabsContent>
+
 
           <TabsContent value="students" className="space-y-4">
             <Card>

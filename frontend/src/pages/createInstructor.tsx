@@ -60,13 +60,15 @@ const CreateInstructorForm = ({ onSubmitSuccess }: InstructorFormProps) => {
       const res = await fetch(`${API_BASE}/instructors/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData}),
       });
 
       if (res.ok) {
         if (onSubmitSuccess) onSubmitSuccess();
       } else {
         console.error("Failed to add instructor");
+        window.alert("Instructor Added Successfully!");
       }
     } catch (err) {
       console.error("Error:", err);
