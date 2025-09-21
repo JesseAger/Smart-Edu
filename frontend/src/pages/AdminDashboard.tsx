@@ -140,9 +140,11 @@ const AdminDashboard = () => {
               <BookOpen className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">4</div>
+              <div className="text-2xl font-bold">
+                {Array.isArray(programs) ? programs.length : 0}
+              </div>
               <p className="text-xs text-muted-foreground">
-                Data Science, Software Dev, Cyber Security, DevOps
+                Loading...
               </p>
             </CardContent>
           </Card>

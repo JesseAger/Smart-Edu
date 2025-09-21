@@ -49,14 +49,10 @@ class MeViewSet(viewsets.GenericViewSet):
         request.user.save(update_fields=["password", "single_use_password"])
         return Response({"detail": "password changed"})
 
-
-
-
 class AdminUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by("id")
     serializer_class = AdminUserSerializer
     permission_classes = [IsAuthenticated & IsAdmin]
-
 
     @action(detail=True, methods=["post"], url_path="suspend")
     def suspend(self, request, pk=None):

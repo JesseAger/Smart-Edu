@@ -15,6 +15,7 @@ class Instructor(models.Model):
             blank=True, 
             null=True
                 )
+    status = models.BooleanField(default="true")
 
     def __str__(self):
         return f"{self.title} {self.last_name} - {self.department}"
