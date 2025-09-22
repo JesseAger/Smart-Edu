@@ -36,6 +36,7 @@ interface Instructor{
   first_name: string;
   last_name: string;
   department: string;
+  status: boolean;
 
 }
 
@@ -247,63 +248,35 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    {
-                      name: "John Doe",
-                      course: "Data Science",
-                      regNo: "DS2024001",
-                      status: "Active",
-                      payment: "Paid",
-                    },
-                    {
-                      name: "Jane Smith",
-                      course: "Software Development",
-                      regNo: "SD2024001",
-                      status: "Active",
-                      payment: "Pending",
-                    },
-                    {
-                      name: "Mike Johnson",
-                      course: "Cyber Security",
-                      regNo: "CS2024001",
-                      status: "Suspended",
-                      payment: "Paid",
-                    },
-                    {
-                      name: "Sarah Wilson",
-                      course: "DevOps",
-                      regNo: "DO2024001",
-                      status: "Ready for Graduation",
-                      payment: "Paid",
-                    },
-                  ].map((student, index) => (
+
+                      {application.map((student, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-4 border rounded-lg"
                     >
                       <div className="space-y-1">
-                        <p className="font-medium">{student.name}</p>
+                        <p className="font-medium">{student.first_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          Reg: {student.regNo} | {student.course}
+                          Reg: {student.submitted_at} | {student.course}
                         </p>
                         <div className="flex gap-2">
                           <Badge
                             variant={
-                              student.status === "Active"
+                              student.application_status === true
                                 ? "default"
-                                : student.status === "Suspended"
+                                : student.application_status === false
                                 ? "destructive"
                                 : "secondary"
                             }
                           >
-                            {student.status}
+                            {student.application_status}
                           </Badge>
                           <Badge
                             variant={
-                              student.payment === "Paid" ? "default" : "outline"
+                              student.payment_method === "Paid" ? "default" : "outline"
                             }
                           >
-                            {student.payment}
+                            {student.payment_method}
                           </Badge>
                         </div>
                       </div>
@@ -320,7 +293,7 @@ const AdminDashboard = () => {
                           <UserX className="h-4 w-4 mr-1" />
                           Expel
                         </Button>
-                        {student.status === "Ready for Graduation" && (
+                        {student.application_status=== true && (
                           <Button size="sm">
                             <GraduationCap className="h-4 w-4 mr-1" />
                             Approve Graduation
@@ -367,35 +340,16 @@ const AdminDashboard = () => {
                   )}
 
                   <div className="space-y-4">
-                    {[
-                      {
-                        name: "Dr. Emily Clark",
-                        courses: ["Data Science", "DevOps"],
-                        students: 45,
-                        status: "Active",
-                      },
-                      {
-                        name: "Prof. David Lee",
-                        courses: ["Software Development"],
-                        students: 38,
-                        status: "Active",
-                      },
-                      {
-                        name: "Ms. Rachel Green",
-                        courses: ["Cyber Security"],
-                        students: 32,
-                        status: "Active",
-                      },
-                    ].map((instructor, index) => (
+                    {active.map((instructor, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between p-4 border rounded-lg"
                       >
                         <div className="space-y-1">
-                          <p className="font-medium">{instructor.name}</p>
+                          <p className="font-medium">{instructor.title} {instructor.last_name}</p>
                           <p className="text-sm text-muted-foreground">
-                            Courses: {instructor.courses.join(", ")} | Students:{" "}
-                            {instructor.students}
+                            Courses: {instructor.department} | Students:{" "}
+                            {Array.isArray(application) ? application.length : 0}
                           </p>
                           <Badge variant="default">{instructor.status}</Badge>
                         </div>
