@@ -255,9 +255,9 @@ const AdminDashboard = () => {
                       className="flex items-center justify-between p-4 border rounded-lg"
                     >
                       <div className="space-y-1">
-                        <p className="font-medium">{student.first_name}</p>
+                        <p className="font-medium">{student.first_name} {student.last_name} </p>
                         <p className="text-sm text-muted-foreground">
-                          Reg: {student.submitted_at} | {student.course}
+                          Email: {student.email} | {student.course}
                         </p>
                         <div className="flex gap-2">
                           <Badge
