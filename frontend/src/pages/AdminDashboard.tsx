@@ -14,6 +14,7 @@ interface Application {
   id: number;
   first_name: String;
   last_name: String;
+  email: string;
   course: string;
   is_paid: boolean;
   submitted_at: string;
@@ -391,7 +392,7 @@ const AdminDashboard = () => {
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
-                          <p className="text-sm">Enrolled Students: Null</p>
+                          {application.map((application, index) => (<p className="text-sm">Enrolled Students: {Array.isArray(application) ? application.length : 0}</p>))}
                           <p className="text-sm">Duration: {program.duration}</p>
                         </div>
                       </CardContent>
@@ -414,7 +415,7 @@ const AdminDashboard = () => {
                     <h3 className="font-semibold">Enrollment Trends</h3>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Data Science</span>
+                        <span>test</span>
                         <span>65 students</span>
                       </div>
                       <div className="flex justify-between">
@@ -461,35 +462,16 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    {
-                      name: "Sarah Wilson",
-                      course: "DevOps",
-                      regNo: "DO2024001",
-                      completionDate: "2024-12-15",
-                    },
-                    {
-                      name: "Mark Taylor",
-                      course: "Data Science",
-                      regNo: "DS2024015",
-                      completionDate: "2024-12-20",
-                    },
-                    {
-                      name: "Lisa Brown",
-                      course: "Cyber Security",
-                      regNo: "CS2024008",
-                      completionDate: "2024-12-18",
-                    },
-                  ].map((student, index) => (
+                  {application.map((student, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-4 border rounded-lg"
                     >
                       <div className="space-y-1">
-                        <p className="font-medium">{student.name}</p>
+                        <p className="font-medium">{student.last_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          Reg: {student.regNo} | {student.course} | Completed:{" "}
-                          {student.completionDate}
+                          Reg: {student.email} | {student.course} | Completed:{" "}
+                          {/* {student.completionDate} replace later with program completion date api endpoint */}
                         </p>
                       </div>
                       <Button>
