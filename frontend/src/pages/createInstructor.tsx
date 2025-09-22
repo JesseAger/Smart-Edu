@@ -116,7 +116,6 @@ const CreateInstructorForm = ({ onSubmitSuccess }: InstructorFormProps) => {
               name="department"
               value={formData.department}
               onChange={handleChange}
-              required
               className="w-full border rounded-md p-2"
             >
               <option value="">-- Select Department --</option>
